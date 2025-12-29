@@ -1,0 +1,60 @@
+# Dell PowerEdge Fan Control Service
+# Dell PowerEdge 风扇控制服务
+#
+# Description / 描述:
+#   Systemd service unit for Dell PowerEdge dynamic fan control script.
+#   用于 Dell PowerEdge 动态风扇控制脚本的 Systemd 服务单元。
+#
+# Installation / 安装:
+#   sudo cp dell-fan.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable dell-fan
+#   sudo systemctl start dell-fan
+#
+
+[Unit]
+# Service description / 服务描述
+Description=Dell PowerEdge Dynamic Fan Control / Dell PowerEdge 动态风扇控制
+
+# Start after network is available / 在网络可用后启动
+After=network.target
+
+# Documentation / 文档
+Documentation=https://github.com/Evil0ctal/Dell-Fan-Control
+
+[Service]
+# Service type / 服务类型
+# simple: The process started with ExecStart is the main process
+# simple：使用 ExecStart 启动的进程是主进程
+Type=simple
+
+# Command to start the service / 启动服务的命令
+ExecStart=/usr/local/bin/dell-fan-control.sh
+
+# Restart policy / 重启策略
+# always: Always restart when the service stops
+# always：服务停止时始终重启
+Restart=always
+
+# Time to wait before restarting / 重启前等待时间
+RestartSec=10
+
+# Run as root (required for ipmitool) / 以 root 运行（ipmitool 需要）
+User=root
+
+# Set working directory / 设置工作目录
+WorkingDirectory=/usr/local/bin
+
+# Environment variables / 环境变量
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Standard output and error logging / 标准输出和错误日志
+StandardOutput=journal
+StandardError=journal
+
+# Identify logs in journal / 在日志中标识
+SyslogIdentifier=dell-fan-control
+
+[Install]
+# Start on multi-user target / 在多用户目标时启动
+WantedBy=multi-user.target
